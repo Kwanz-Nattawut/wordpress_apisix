@@ -1,0 +1,13 @@
+FROM golang:1.20-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -o main .
+
+FROM alpine
+RUN apk add --no-cache netcat-openbsd
+WORKDIR /
+COPY --from=builder /app/main /main
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh /main
+
+CMD ["/wait-for-it.sh", "db", "3306", "15", "/main"]

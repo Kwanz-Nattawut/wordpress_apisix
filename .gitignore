@@ -1,0 +1,11 @@
+#folder
+
+mysql_data/
+
+wordpress_data/
+
+etcd_data/
+
+apisix_log/
+
+.htaccess
