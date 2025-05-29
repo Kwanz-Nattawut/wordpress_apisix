@@ -8,3 +8,5 @@ etcd_data/
 apisix_log/
 
 .htaccess
+
+.env

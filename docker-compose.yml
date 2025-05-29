@@ -39,14 +39,14 @@ services:
       apisix:
   db:
     image: mariadb:latest
-    restart: unless-stopped
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: db@password
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
     networks:
@@ -59,11 +59,11 @@ services:
       - "3000:3000"
     environment:
       DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: wordpress
-      DB_PASSWORD: wordpress
-      DB_NAME: mydb
-      APISIX_KEY: AXFGrurjdbGS5G9sX2722g4tMNJyruFb
+      DB_PORT: ${MYSQL_PORT}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+      APISIX_KEY: ${APISIX_KEY}
     depends_on:
       - db
     restart: always
@@ -75,10 +75,10 @@ services:
       - db
     restart: always
     environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: mydb
+      WORDPRESS_DB_HOST: db:${MYSQL_PORT}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     ports:
       - "8080:80"
     volumes:
